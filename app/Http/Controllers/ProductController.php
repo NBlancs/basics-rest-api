@@ -18,14 +18,20 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
-
+        // Validate ang incoming data
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:0'
         ]);
+
+        // Create ang product
+        $product = Product::create($validated);
+    
+
+        // Return 201 Created status
+        return response()->json($product, 201);
     }
 
     /**
@@ -33,7 +39,12 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $product = Product::find($id);
+
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+        return response()->json($product, 200);
     }
 
     /**
